@@ -1,0 +1,119 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META HTTP-EQUIV="Content-Language" CONTENT="en-us">
+<TITLE>Pagegate</TITLE>
+</HEAD>
+<BODY background="Gray_WeaveC040.gif">
+<H1><font color="#0000FF">Page Access Password</font></H1>
+<HR>
+<P><font color="#0000FF">Please enter your User Name and Password to Access the
+Paging Network</font></P>
+<!--webbot BOT="GeneratedScript" PREVIEW=" " startspan --><script Language="JavaScript"><!--
+function FrontPage_Form1_Validator(theForm)
+{
+
+  if (theForm.Password.value == "")
+  {
+    alert("Please enter a value for the \"Password\" field.");
+    theForm.Password.focus();
+    return (false);
+  }
+
+  if (theForm.Password.value.length < 4)
+  {
+    alert("Please enter at least 4 characters in the \"Password\" field.");
+    theForm.Password.focus();
+    return (false);
+  }
+
+  if (theForm.Password.value.length > 4)
+  {
+    alert("Please enter at most 4 characters in the \"Password\" field.");
+    theForm.Password.focus();
+    return (false);
+  }
+
+  var checkOK = "0123456789-.,";
+  var checkStr = theForm.Password.value;
+  var allValid = true;
+  var decPoints = 0;
+  var allNum = "";
+  for (i = 0;  i < checkStr.length;  i++)
+  {
+    ch = checkStr.charAt(i);
+    for (j = 0;  j < checkOK.length;  j++)
+      if (ch == checkOK.charAt(j))
+        break;
+    if (j == checkOK.length)
+    {
+      allValid = false;
+      break;
+    }
+    if (ch == ".")
+    {
+      allNum += ".";
+      decPoints++;
+    }
+    else if (ch != ",")
+      allNum += ch;
+  }
+  if (!allValid)
+  {
+    alert("Please enter only digit characters in the \"Password\" field.");
+    theForm.Password.focus();
+    return (false);
+  }
+
+  if (decPoints > 1)
+  {
+    alert("Please enter a valid number in the \"Password\" field.");
+    theForm.Password.focus();
+    return (false);
+  }
+  return (true);
+}
+//--></script><!--webbot BOT="GeneratedScript" endspan --><FORM METHOD="POST" action="../_vti_bin/shtml.exe/WebPage/pagegate.htm" target="_self" onsubmit="return FrontPage_Form1_Validator(this)" name="FrontPage_Form1" webbot-action="--WEBBOT-SELF--">
+<!--webbot bot="SaveResults" U-File="formrslt.htm" S-Format="HTML/BR"
+S-Label-Fields="TRUE" B-Reverse-Chronology="FALSE" S-Date-Format="%m/%d/%Y"
+S-Time-Format="%I:%M:%S %p" S-Builtin-Fields="REMOTE_NAME REMOTE_USER Date Time"
+U-Confirmation-Url="page.htm" startspan --><input TYPE="hidden" NAME="VTI-GROUP" VALUE="0"><!--webbot bot="SaveResults" endspan i-checksum="43374" -->
+<P>
+<font color="#0000FF">
+Please provide the following contact information:</font></P>
+<BLOCKQUOTE>
+<TABLE>
+<TR>
+<TD ALIGN="right">
+<font color="#0000FF" face="Arial">User Name</font></TD>
+<TD>
+<font color="#0000FF">
+<INPUT TYPE=TEXT NAME="Contact_FullName" SIZE=35>
+</font>
+</TD>
+</TR>
+</TABLE>
+</BLOCKQUOTE>
+<font color="#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font face="Arial">Password&nbsp;&nbsp;&nbsp; </font><!--webbot bot="Validation"
+S-Display-Name="Password" S-Data-Type="Number" S-Number-Separators=",."
+B-Value-Required="TRUE" I-Minimum-Length="4" I-Maximum-Length="4" --><input type="password" name="Password" size="20" maxlength="4"></font>
+<p><font color="#0000FF">
+<a href="http://">
+<INPUT TYPE=SUBMIT VALUE="Submit Form">
+</a>
+<INPUT TYPE=RESET VALUE="Reset Form">
+</font></p>
+</FORM>
+<HR>
+<H5>
+<font color="#0000FF">
+Author information goes here.<br>Copyright © 1999 Seneca Area Emergency
+Services. All rights reserved. <BR>
+Revised: <!--WEBBOT bot=TimeStamp
+    S-Type="EDITED"
+    S-Format="%B %d, %Y" startspan
+-->April 26, 2001<!--WEBBOT bot=TimeStamp endspan i-checksum="17477"
+--></font></H5>
+</BODY>
+</HTML>

@@ -1,0 +1,486 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>West Deer EMS Homepage</title>
+
+<script LANGUAGE="JavaScript" FPTYPE="dynamicanimation">
+<!--
+  // If you want to change this script, you must also make the following
+  // changes so that FrontPage will not overwrite your new script.
+  // In the script tag, change type="dynamicanimation" to type="mydynamicanimation"
+  // In the first script statement, change "dynamicanimation" to "mydynamicanimation"
+  // Throughout the HTML content, change dynamicanimation= to mydynamicanimation=
+  // Change function dynAnimation to function mydynAnimation
+  // In the body tag, change onload="dynAnimation()" to onload="mydynAnimation()"
+  dynamicanimAttr = "dynamicanimation"
+  animateElements = new Array()
+  currentElement = 0
+  speed = 0
+  stepsZoom = 8
+  stepsWord = 8
+  stepsFly = 12
+  stepsSpiral = 16
+  steps = stepsZoom
+  step = 0
+  outString = ""
+  function dynAnimation()
+  {
+    var ms = navigator.appVersion.indexOf("MSIE")
+    ie4 = (ms>0) && (parseInt(navigator.appVersion.substring(ms+5, ms+6)) >= 4)
+    if(!ie4)
+    {
+      if((navigator.appName == "Netscape") &&
+         (parseInt(navigator.appVersion.substring(0, 1)) >= 4))
+      {
+        for (index=document.layers.length-1; index >= 0; index--)
+        {
+            layer=document.layers[index]
+            if (layer.left==10000)
+                layer.left=0
+        }
+      }
+      return
+    }
+    for (index=document.all.length-1; index >= document.body.sourceIndex; index--)
+    {
+      el = document.all[index]
+      animation = el.getAttribute(dynamicanimAttr, false)
+      if(null != animation)
+      {
+        if(animation == "dropWord" || animation == "flyTopRightWord" || animation == "flyBottomRightWord")
+        {
+          ih = el.innerHTML
+          outString = ""
+          i1 = 0
+          iend = ih.length
+          while(true)
+          {
+            i2 = startWord(ih, i1)
+            if(i2 == -1)
+              i2 = iend
+            outWord(ih, i1, i2, false, "")
+            if(i2 == iend)
+              break
+            i1 = i2
+            i2 = endWord(ih, i1)
+            if(i2 == -1)
+              i2 = iend
+            outWord(ih, i1, i2, true, animation)
+            if(i2 == iend)
+              break
+            i1 = i2
+          }
+          document.all[index].innerHTML = outString
+          document.all[index].style.posLeft = 0
+          document.all[index].setAttribute(dynamicanimAttr, null)
+        }
+        if(animation == "zoomIn" || animation == "zoomOut")
+        {
+          ih = el.innerHTML
+          outString = "<SPAN " + dynamicanimAttr + "=\"" + animation + "\" style=\"position: relative; left: 10000;\">"
+          outString += ih
+          outString += "</SPAN>"
+          document.all[index].innerHTML = outString
+          document.all[index].style.posLeft = 0
+          document.all[index].setAttribute(dynamicanimAttr, null)
+        }
+      }
+    }
+    i = 0
+    for (index=document.body.sourceIndex; index < document.all.length; index++)
+    {
+      el = document.all[index]
+      animation = el.getAttribute(dynamicanimAttr, false)
+      if (null != animation)
+      {
+        if(animation == "flyLeft")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = 0
+        }
+        else if(animation == "flyRight")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)+document.body.offsetWidth
+          el.style.posTop = 0
+        }
+        else if(animation == "flyTop" || animation == "dropWord")
+        {
+          el.style.posLeft = 0
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "flyBottom")
+        {
+          el.style.posLeft = 0
+          el.style.posTop = document.body.scrollTop-offsetTop(el)+document.body.offsetHeight
+        }
+        else if(animation == "flyTopLeft")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "flyTopRight" || animation == "flyTopRightWord")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)+document.body.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "flyBottomLeft")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)+document.body.offsetHeight
+        }
+        else if(animation == "flyBottomRight" || animation == "flyBottomRightWord")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)+document.body.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)+document.body.offsetHeight
+        }
+        else if(animation == "spiral")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "zoomIn")
+        {
+          el.style.posLeft = 10000
+          el.style.posTop = 0
+        }
+        else if(animation == "zoomOut")
+        {
+          el.style.posLeft = 10000
+          el.style.posTop = 0
+        }
+        else
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = 0
+        }
+        el.initLeft = el.style.posLeft
+        el.initTop = el.style.posTop
+        animateElements[i++] = el
+      }
+    }
+    window.setTimeout("animate();", speed)
+  }
+  function offsetLeft(el)
+  {
+    x = el.offsetLeft
+    for (e = el.offsetParent; e; e = e.offsetParent)
+      x += e.offsetLeft;
+    return x
+  } 
+  function offsetTop(el)
+  {
+    y = el.offsetTop
+    for (e = el.offsetParent; e; e = e.offsetParent)
+      y += e.offsetTop;
+    return y
+  } 
+  function startWord(ih, i)
+  {
+    for(tag = false; i < ih.length; i++)
+    {
+      c = ih.charAt(i)
+      if(c == '<')
+        tag = true
+      if(!tag)
+        return i
+      if(c == '>')
+        tag = false
+    }
+    return -1
+  }
+  function endWord(ih, i)
+  {
+    nonSpace = false
+    space = false
+    while(i < ih.length)
+    {
+      c = ih.charAt(i)
+      if(c != ' ')
+        nonSpace = true
+      if(nonSpace && c == ' ')
+        space = true
+      if(c == '<')
+        return i
+      if(space && c != ' ')
+        return i
+      i++
+    }
+    return -1
+  }
+  function outWord(ih, i1, i2, dyn, anim)
+  {
+    if(dyn)
+      outString += "<SPAN " + dynamicanimAttr + "=\"" + anim + "\" style=\"position: relative; left: 10000;\">"
+    outString += ih.substring(i1, i2)
+    if(dyn)
+      outString += "</SPAN>"
+  }
+  function animate()
+  {
+    el = animateElements[currentElement]
+    animation = el.getAttribute(dynamicanimAttr, false)
+    step++
+    if(animation == "spiral")
+    {
+      steps = stepsSpiral
+      v = step/steps
+      rf = 1.0 - v
+      t = v * 2.0*Math.PI
+      rx = Math.max(Math.abs(el.initLeft), 200)
+      ry = Math.max(Math.abs(el.initTop),  200)
+      el.style.posLeft = Math.ceil(-rf*Math.cos(t)*rx)
+      el.style.posTop  = Math.ceil(-rf*Math.sin(t)*ry)
+    }
+    else if(animation == "zoomIn")
+    {
+      steps = stepsZoom
+      el.style.fontSize = Math.ceil(50+50*step/steps) + "%"
+      el.style.posLeft = 0
+    }
+    else if(animation == "zoomOut")
+    {
+      steps = stepsZoom
+      el.style.fontSize = Math.ceil(100+200*(steps-step)/steps) + "%"
+      el.style.posLeft = 0
+    }
+    else
+    {
+      steps = stepsFly
+      if(animation == "dropWord" || animation == "flyTopRightWord" || animation == "flyBottomRightWord")
+        steps = stepsWord
+      dl = el.initLeft / steps
+      dt = el.initTop  / steps
+      el.style.posLeft = el.style.posLeft - dl
+      el.style.posTop = el.style.posTop - dt
+    }
+    if (step >= steps) 
+    {
+      el.style.posLeft = 0
+      el.style.posTop = 0
+      currentElement++
+      step = 0
+    }
+    if(currentElement < animateElements.length)
+      window.setTimeout("animate();", speed)
+  }
+//-->
+</script><meta name="Microsoft Border" content="b, default"></head>
+
+<body background="starembk.gif" onload="dynAnimation()"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<p align="center">&nbsp;</p>
+<div align="center"><center>
+
+<table border="0" width="720" height="90" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="137" height="90" align="left"><p align="center"><img src="patch.jpg" alt="patch.jpg (25314 bytes)" WIDTH="264" HEIGHT="278"></td>
+    <th width="575" height="90" valign="middle" align="center"><big><big><big><big><big><big><strong><em><font color="#800000" face="Aachen BT"><p align="center"></font><font color="#800000" face="Aldine721 Lt BT">West Deer Township Emergency Medical Service Inc.</font></em></strong></big></big></big></big></big></big></th>
+  </tr>
+</table>
+</center></div>
+
+<p align="center"><img src="redmarb.gif" alt="redmarb.gif (1488 bytes)" WIDTH="720" HEIGHT="15"></p>
+<div align="center"><center>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100">
+  <tr>
+    <td width="140" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><font face="Aachen BT" size="4" color="#800000"><a href="http://www.nauticom.net/www/emt348/service.htm" target><img src="service.gif" alt="Some Photos and Information About Our Service and Equipment" style="border: medium none" align="middle" border="0" WIDTH="140" HEIGHT="43"></a></font></td>
+    <td width="140" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><font face="Aachen BT" size="4" color="#800000"><a href="http://www.nauticom.net/www/emt348/events.htm" target><img src="events.gif" alt="A Listing of Our Upcoming Events" style="border: medium none" align="center" border="0" WIDTH="140" HEIGHT="43"></a></font></td>
+    <td width="140" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><font face="Aachen BT" size="4" color="#800000"><a href="http://www.nauticom.net/www/emt348/Other.htm" target><img src="other.gif" alt="Other EMS and Public Safety Related Information (EMS Prayer, History OF EMS, Meaning of The Star of Life, A Collection of Photos, Plus More) " style="border: medium none" align="middle" border="0" WIDTH="140" HEIGHT="43"></a></font></td>
+    <td width="70" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><font face="Aachen BT" size="4" color="#800000"><a href="http://www.Lpage.com/wgb/wgbsign.dbm?owner=WDEMS1" target><img src="sign.gif" alt="Sign Our Guestbook So You Can Be informed of Information About Upcoming Events and Other Information About Our Webpage" style="border: medium none" align="middle" border="0" WIDTH="140" HEIGHT="43"></a></font></td>
+    <td width="70" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><a href="http://www.nauticom.net/www/emt348/webring.htm"><img src="webring.gif" alt="Webrings we are members of." border="0" WIDTH="140" HEIGHT="43"></a></td>
+  </tr>
+  <tr>
+    <td width="140" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><font face="Aachen BT" size="4" color="#800000"><a href="http://www.nauticom.net/www/emt348/members.htm" target><img src="members.gif" alt="A Listing Of Our Members and Thier Crew Numbers" style="border: medium none" align="middle" border="0" WIDTH="140" HEIGHT="43"></a></font></td>
+    <td width="140" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><font face="Aachen BT" size="4" color="#800000"><a href="http://www.nauticom.net/www/emt348/links.htm" target><img src="links.gif" alt="Our Page Of Links to Other Web Pages (Mostly Public Safety Related)" style="border: medium none" align="middle" border="0" WIDTH="140" HEIGHT="43"></a></font></td>
+    <td width="140" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><font face="Aachen BT" size="4" color="#800000"><a href="http://kneetoe.com/scrawlwall/walls/EMT348.shtml" target><img src="forum.gif" alt="A Place to Talk to Other Visitors about Anything EMS Related" style="border-left: medium none; border-right: medium none; border-top: medium none; border-bottom: medium none" align="middle" border="0" WIDTH="140" HEIGHT="43"></a></font></td>
+    <td width="70" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><a href="http://www.Lpage.com/wgb/wgbview.dbm?owner=WDEMS1" target><font face="Aachen BT" size="4" color="#800000"><img src="view.gif" alt="Look at all the People That Have Signed Our Guestbook" style="border: medium none" align="middle" border="0" WIDTH="140" HEIGHT="43"></font></a></td>
+    <td width="70" height="43" dynamicanimation="flyTopLeft" style="position: relative !important; left: 10000 !important"><font face="Aachen BT" size="4" color="#800000"><a href="http://www.nauticom.net/www/emt348/toc.htm"><img src="toc.gif" alt="Table Of Contents" border="0" WIDTH="140" HEIGHT="43"></a></font></td>
+  </tr>
+</table>
+</center></div>
+
+<p align="center"><img src="strlf.gif" alt="strlf.gif (7094 bytes)" WIDTH="500" HEIGHT="40"></p>
+
+<h2><font color="#800000" face="Aldine721 Lt BT"><big>Our Mission</big></font></h2>
+
+<h2><font color="#800000" face="Aldine721 Lt BT">To deliver the highest quality medical
+transportation and health care services through a unified team of caring professionals in
+a prompt and cost effective manner.&nbsp; </font></h2>
+
+<hr>
+
+<h2><font color="#800000" face="Aldine721 Lt BT"><big>Company Profile</big></font></h2>
+
+<h2><font color="Maroon" size="4" face="Aldine721 Lt BT">West Deer Emergency Medical
+Service is a Municipal Ambulance Service Located in West Deer Township in Northern
+Allegheny County Pennsylvania. The Township is Approximately 28.8 Square Miles and has a
+Population of Approximately 12,200. We are an ALS(Advanced Life Support) Service With
+Medical Command Through <a href="http://www.fire-ems.net/firedept/view/NewKensingtonPA" style="color: rgb(128,0,0)">Citizens General Hospital.</a> We are a Non-Profit
+Organization. Our Income is From Our Annual Fund Drive, Ambulance Service Billing, and
+Other Donations.&nbsp; We Rely on Both Volunteer and Paid <a href="http://www.nauticom.net/www/emt348/members.htm" style="color: rgb(128,0,0)">Crew
+Members</a> , Which Provide Our Residents With Emergency Medical Services 24 hours a day 7
+Days a Week.</font></h2>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" msimagelist>
+  <tr msimagelist>
+    <td valign="baseline" width="42" msimagelist><img src="bullet2.jpg" width="10" height="10" hspace="16"></td>
+    <td valign="top" width="100%"><font size="5"><h2></font><font size="4" color="#800000" face="Aldine721 Lt BT"><a href="http://www.nauticom.net/www/emt348/vehicles.htm" style="color: rgb(128,0,0)">Vehicles:</a><br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" border="0" WIDTH="10" HEIGHT="10"> 2 MICU Type III<br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" border="0" WIDTH="10" HEIGHT="10"> 1 Response Unit</font></h2>
+    </td msimagelist>
+  </tr>
+  <tr msimagelist>
+    <td valign="baseline" width="42" msimagelist><img src="bullet2.jpg" width="10" height="10" hspace="16"></td>
+    <td valign="top" width="100%"><h2><font size="4" color="#800000" face="Aldine721 Lt BT"><u>Annual
+    Call Volume:<br>
+    </u><img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> 1996 - 545 Calls<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 450 Transported<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 95 Non-Transports<br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> 1997 - 600 Estimated</font></h2>
+    </td msimagelist>
+  </tr>
+  <tr msimagelist>
+    <td valign="baseline" width="42" msimagelist><img src="bullet2.jpg" width="10" height="10" hspace="16"></td>
+    <td valign="top" width="100%"><h2><font size="4" color="#800000" face="Aldine721 Lt BT"><u><a href="http://www.nauticom.net/www/emt348/members.htm" style="color: rgb(128,0,0)">Personnel:</a><br>
+    </u><img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> 1 F/T Paramedic<br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> 5 P/T Paramedics<br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> 8 P/T EMTs<br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> 13-Casual Part Time/Per Call<br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> On Base Crews<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Monday-Friday 8am-12am<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Saturday &amp; Sunday
+    12pm-12am<br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> On-Call Crews&nbsp; </font><font color="#800000" face="Aldine721 Lt BT" size="1">(Crews Responding From Home If Available)</font><br>
+    <font size="4" color="#800000" face="Aldine721 Lt BT">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    7 Days/24 Hours</font></h2>
+    </td msimagelist>
+  </tr>
+  <tr msimagelist>
+    <td valign="baseline" width="42" msimagelist><img src="bullet2.jpg" width="10" height="10" hspace="16"></td>
+    <td valign="top" width="100%"><h2><font size="4" color="#800000" face="Aldine721 Lt BT"><u>Services
+    Provided:<br>
+    </u><img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> Emergency Ambulance<br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> Non-Emergency Ambulance</font></h2>
+    </td msimagelist>
+  </tr>
+  <tr msimagelist>
+    <td valign="baseline" width="42" msimagelist><img src="bullet2.jpg" width="10" height="10" hspace="16"></td>
+    <td valign="top" width="100%"><h2><font size="4" color="#800000" face="Aldine721 Lt BT"><u>Areas
+    Served:<br>
+    </u><img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> West Deer Twp<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4,350 Households<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 12,200 population
+    5%-10% Growth<br>
+    <img src="bullet2.jpg" alt="wpe7.jpg (710 bytes)" WIDTH="10" HEIGHT="10"> Nursing Homes<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2-Verland<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2-Passavant<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; New 120 Bed Facility-
+    Spring 1999</font></h2>
+    </td msimagelist>
+  </tr>
+</table msimagelist>
+
+<hr>
+
+<h2><font color="#800000" face="Aldine721 Lt BT">Contact Information</font></h2>
+
+<p><font color="#800000" face="Aldine721 Lt BT">If you have any questions, comments, or
+would like information from us. You can contact us by the ways listed below. </font>
+
+<dl>
+  <dt><font color="#800000" face="Aldine721 Lt BT"><strong>Telephone</strong> </font></dt>
+  <dd><font color="#800000" face="Aldine721 Lt BT">412-265-4750</font></dd>
+  <dt><font color="#800000" face="Aldine721 Lt BT"><strong>FAX</strong> </font></dt>
+  <dd><font color="#800000" face="Aldine721 Lt BT">412-265-0003 </font></dd>
+  <dt><font color="#800000" face="Aldine721 Lt BT"><strong>Postal address</strong> </font></dt>
+  <dd><font color="#800000" face="Aldine721 Lt BT">P.O. Box 202, Russelton, PA 15076</font></dd>
+  <dt><font color="#800000" face="Aldine721 Lt BT"><strong>Electronic mail</strong> </font></dt>
+  <dd><font face="Aldine721 Lt BT"><font color="#800000">General Information:</font> <a href="mailto:wdems@nauticom.net">wdems@nauticom.net</a><br>
+    <font color="#800000">Webmaster:</font> <a href="mailto:emt348@nauticom.net">emt348@nauticom.net</a></font></dd>
+</dl>
+
+<hr>
+<!--Begin Public Safety Search Engine Code-->
+
+<form ACTION="http://www.policeworld.net/search/cadi_out.cgi" METHOD="post">
+  <a href="http://www.policeworld.net/search/index.shtml"><div align="center"><center><p><img src="http://www.POLICEWORLD.NET/search/publicsafety.gif" border="0" alt="Search The Public Safety Search Engine" width="294" height="31"></a></p>
+  </center></div><div align="center"><center><p><input TYPE="text" Name="mots" SIZE="35"><input TYPE="submit" Value="Start"><br>
+  <strong><font size="2" face="Arial">Use Commas to Seperate Keywords</font></strong></p>
+  </center></div><font size="2" face="Arial"><div align="center"><center><p><b>Add your site
+  to <a href="http://www.policeworld.net/search/addurl.shtml">The Public Safety Search
+  Engine</a></b></p>
+  </center></div></font>
+</form>
+<!--End Public Safety Search Engine Code-->
+<font SIZE="1">
+
+<form action="http://www.stpt.com/cgi-bin/pwrsrch/altavista.cgi" method="GET" style="margin-left: -5px">
+  <b><font size="-1" color="#FF0000"><div align="center"><center><p></font></font><font size="1" color="#FF0000" face="Aldine721 Lt BT">PowerSearch</font><font size="1" face="Aldine721 Lt BT"><br>
+  <a href="http://www.stpt.com/" target><img src="http://www.stpt.com/stpthalf.gif" border="0" width="139" height="43" align="top" alt="Starting
+Point(TM)"></a> </font><font SIZE="1"></p>
+  </center></div><div align="center"><center><p><font face="Aldine721 Lt BT"><input type="text" name="query" value size="25"> <input type="submit" name="S" value="Find"><br>
+  <input type="RADIO" name="search" value="web" checked>The Web <input type="RADIO" name="search" value="pwrsrch">Other Search Resources <!-- end MetaSearch form interface --></font></p>
+  </center></div><div align="center"><center><p><font face="Aldine721 Lt BT">Click on the
+  graphic below to vote for this<br>
+  page as a <a href="http://www.stpt.com">Starting Point</a> Hot Site.&nbsp;<br>
+  <input border="NONE" type="image" src="http://www.stpt.com/vote.gif" height="60" width="60" name="I1"> <!--END Graphical Vote Link--></font></p>
+  </center></div>
+</form>
+
+<p align="center"></font><font face="Aldine721 Lt BT"><!--BEGIN Graphical Vote Link--> </font><a href="http://www.policeworld.net/banner/banners.shtml" target="_top"><img src="%3chttp:/www.policeworld.net/banner/banbtn.gif%3e" width="40" height="40" border="1" hspace="0" vspace="0"></a><a HREF="%3chttp:/www.policeworld.net/banner/redirect.cgi?a=103&gt;&amp;s=400x40" target="_top"><img SRC="http://www.policeworld.net/banner/barimage.cgi?a=103&amp;s=400x40" WIDTH="400" height="40" BORDER="1" HSPACE="0" VSPACE="0" ALT="Image Loading..."></a><br>
+<font SIZE="-1"><a HREF="http://www.policeworld.net/banner/banners.shtml" target="_top">Proud
+Member of the Public Safety Banner Exchange</a></font> </p>
+<!-- END PUBLIC SAFETY BANNER EXCHANGE CODE -->
+
+<p align="center"><font face="Aldine721 Lt BT"><a href="http://ad.linkexchange.com/1/X411554/gotoad.map" target="_top"><img width="440" height="40" border="0" ismap alt="LinkExchange" src="http://ad.linkexchange.com/1/X411554/logoshowad?free" align="middle"></a><br>
+<font SIZE="1"><a href="http://www.linkexchange.com/" target="_top">LinkExchange Member</a><br>
+</font><br>
+<img src="http://www.nauticom.net/www/emt348/highway.gif" width="556" height="45" alt="highway.gif (39136 bytes)" align="middle"><!-- END LINKEXCHANGE CODE --> <br>
+<img border="0" src="http://www.nauticom.net/www/emt348/letthemthrough.gif" width="253" height="252" align="middle"><br>
+<img src="http://www.nauticom.net/www/emt348/highway.gif" width="556" height="45" alt="highway.gif (39136 bytes)" align="middle"><br>
+<br>
+<img src="http://www.nauticom.net/www/emt348/strlf.gif" width="500" height="40" alt="strlf.gif (7094 bytes)" align="middle"><br>
+<small><small><small><small><small><small><small><small><small><small><small><small><small><small><small><small><font size="-1" color="#FF0000">We support the work of the National Center for Missing and
+Exploited Children</font><small><small> </small></small></small></small></small></small></small></small></small></small></small></small></small></small></small></small></small></small><br>
+<font size="5" color="#ff0000">Help Find A Missing Child<br>
+</font>
+<applet code="NCMECbanner.class" codebase="http://www.missingkids.com/java/" align="middle" hspace="8" width="342" height="128">
+</applet>
+<br>
+<font size="-1" color="#FF0000"><small><small>Call 1-800-THE-LOST (1-800-843-5678) if
+you've seen this child</small></small><br>
+</font><img src="http://www.nauticom.net/www/emt348/abluline.gif" width="575" height="10" alt="abluline.gif (11170 bytes)" align="middle"><br>
+<!-- ************** HVBcount2e counter script start ************** -->You Are Visitor <a href="http://www.siteflow.com/hvb2e/stats.cgi?WDEMS" target><script language="JavaScript"> 
+     <!--
+     document.write('<img src="http://www.siteflow.com/hvb2e/counter.cgi?')     
+     document.write('WDEMS,') 
+     document.write(document.referrer,'" border=0></a>') 
+     // Service : HVBcount2e 
+     // Provider : Siteflow 
+     // Address : http://www.siteflow.com/ 
+     // Countername : yourcountername // --> 
+</script></a><noscript><a><img src="http://www.siteflow.com/hvb2e/counter.cgi?WDEMS,NoJavaScript" border="0" width="32" height="12"></a> </noscript><!-- ************** HVBcount2e counter script end ************** -->Since April 23, 1997 <br>
+<img src="http://www.nauticom.net/www/emt348/abluline.gif" width="575" alt="abluline.gif (11170 bytes)" align="middle"></font></p>
+<b><b><b>
+
+<p align="center"><font face="Aldine721 Lt BT">&nbsp;</b></b></b> </font></p>
+</b>
+
+<p><font face="Aldine721 Lt BT">&nbsp; <font size="1" color="#800000"><a href="http://www.Lpage.com/" target><img src="lpagebutton.gif" border="0" width="88" height="31" alt="Get A FREE Guestbook For Your Webpage"></a></font><a href="http://kneetoe.com/scrawlwall/" target><img src="scrawl.gif" alt="Get A FREE Scrawlwall For Your Webpage" border="0" WIDTH="88" HEIGHT="31"></a></font><a href="http://www.addme.com"><img alt="Add Me!" border="0" src="http://www.addme.com/link3.gif" width="150" height="40"></a> <br>
+<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p align="center"><nobr>[&nbsp;Home&nbsp;]</nobr> <nobr>[&nbsp;<a href="Other.htm">Other&nbsp;Stuff</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="members.htm">Our&nbsp;Members</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="webring.htm">Our&nbsp;Web&nbsp;rings</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="service.htm">Look&nbsp;Around&nbsp;Our&nbsp;Service</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="links.htm">Our&nbsp;Links</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="events.htm">Upcoming&nbsp;Events</a>&nbsp;]</nobr><br>
+<nobr>[&nbsp;<a href="toc.htm">Contents</a>&nbsp;]</nobr><nobr>[&nbsp;<a href="toc.htm">Next</a>&nbsp;]</nobr></p>
+
+<p align="center"><a HREF="http://www.eads.com/ads/pageserv.pl?healdiet02.cfg,CN04895"><img SRC="http://www.eads.com/graphics/ads/healdiet02.gif?CN04895" HEIGHT="55" WIDTH="460" ALT="Click Here to Visit Our Sponsor" border="0"></a></p>
+
+<p align="center"><font face="Aldine721 Lt BT"><a href="http://www.eads.com/ads/pageserv.pl?socignrl03.cfg,CN04895" target><img src="http://www.eads.com/graphics/ads/socignrl03.gif?CN04895" height="55" width="460" alt="Click Here to Visit Our Sponsor" border="0"></a><br>
+<a HREF="http://www.eads.com"><font SIZE="1"><u>Get Sponsored</u></font></a></font></p>
+
+<h5>Send mail to <a href="mailto:emt348@nauticom.net">emt348@nauticom.net</a> with questions or comments about this web site.<br>
+Copyright © 1997 West Deer Township Emergency Medcial Services<br>
+Last modified: February 08, 1998 </h5>
+</td></tr><!--msnavigation--></table></body>
+</html>
